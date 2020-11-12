@@ -13,6 +13,7 @@ class Catatan(models.Model):
     now = datetime.now().replace(microsecond=0)
     judul = models.CharField(max_length=100)
     ket = models.TextField(max_length=500, help_text="maksimal 500 kata")
+    waktu_kegiatan = models.CharField(max_length=100, help_text="Dalam Menit")
     
 class Gambar(models.Model):
     upload_img = models.FileField(default='', upload_to='images/', null=False, blank=True)

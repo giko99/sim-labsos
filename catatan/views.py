@@ -4,8 +4,9 @@ from django.shortcuts import render, redirect
 from django.db.models.functions import ExtractWeekDay
 from django.forms.models import model_to_dict
 from datetime import datetime, timedelta
-# tasks : mengambil catatan berdasarkan user yang login
-# jika user adalah staff maka ambil semua catatan 
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='/accounts/')
 def index(req):
     form_catatan = forms.CatatanForm()
     form_gambar = forms.GambarForm()
@@ -31,18 +32,18 @@ def index(req):
 
     })
     
-
+@login_required(login_url='/accounts/')
 def detail(req, id):
     task = models.Catatan.objects.filter(pk=id).first()
     return render(req, 'catatan/detail.html', {
         'data': task,
     })
-
+@login_required(login_url='/accounts/')
 def delete(req, id):
     models.Catatan.objects.filter(pk=id).delete()
     return redirect('/catatan/')
 
-
+@login_required(login_url='/accounts/')
 def index_dosen(req):
 
     group = req.user.groups.first() #mengambil group user
@@ -52,7 +53,7 @@ def index_dosen(req):
     return render(req, 'dosenah/index.html',{
         'data': catatans,
     })
-
+@login_required(login_url='/accounts/')
 def detail_dosen(req):
 
     group = req.user.groups.first() #mengambil group user
@@ -62,7 +63,7 @@ def detail_dosen(req):
     return render(req, 'dosenah/index.html',{
         'data': catatans,
     })
-
+@login_required(login_url='/accounts/')
 def new(req, *args, **kwargs):
     form_catatan = forms.CatatanForm()
     form_gambar = forms.GambarForm()
@@ -76,72 +77,6 @@ def new(req, *args, **kwargs):
         for file in files:
             images.append(models.Gambar.objects.create(upload_img=file,catatan=form_catatan.instance))
         return redirect('/catatan/')
-    return render(req, 'catatan/index.html',{
-        'form_catatan' : form_catatan,
-        'form_gambar' : form_gambar,
-    })
-
-# def update(req, id):
-#     if req.POST:
-#         task = models.Catatan.objects.filter(pk=id).update(
-#             tgl_kegiatan=req.POST['tgl_kegiatan'], 
-#             judul=req.POST['judul'], 
-#             ket=req.POST['ket'], 
-#             upload_img=req.POST['upload_img'])
-#         return redirect('/catatan/')
-
-#     task = models.Catatan.objects.filter(pk=id).first()
-#     return render(req, 'catatan/update.html', {
-#         'data': task,
-#     })
-def catatan_dosen(req):
-    form_catatan = forms.CatatanForm()
-    form_gambar = forms.GambarForm()
-    if req.method == 'POST':
-        form_catatan = forms.CatatanForm(req.POST)
-        if form_catatan.is_valid():
-            form_catatan.instance.owner=req.user
-            form_catatan.save()
-        images = []
-        files = req.FILES.getlist('upload_img')
-        for file in files:
-            images.append(models.Gambar.objects.create(upload_img=file,catatan=form_catatan.instance))
-        return redirect('/catatan.d/')
-
-    tasks = models.Catatan.objects.filter(owner=req.user).annotate(week=ExtractWeekDay('waktu'))
-    group = req.user.groups.first()
-    if group is not None and group.name == 'staf':
-        tasks = models.Catatan.objects.annotate(week=ExtractWeekDay('waktu'))
-    return render(req, 'catatan.d/index.html',{
-        'data': tasks,
-        'form_catatan' : form_catatan,
-        'form_gambar' : form_gambar,
-
-    })
-
-def detail_catatan_dosen(req, id):
-    task = models.Catatan.objects.filter(pk=id).first()
-    return render(req, 'catatan.d/detail.html', {
-        'data': task,
-    })
-
-def delete_catatan_dosen(req, id):
-    models.Catatan.objects.filter(pk=id).delete()
-    return redirect('/catatan.d/')
-
-def new_catatan_dosen(req, *args, **kwargs):
-    form_catatan = forms.CatatanForm()
-    form_gambar = forms.GambarForm()
-    if req.method == 'POST':
-        form_catatan = forms.CatatanForm(req.POST)
-        if form_catatan.is_valid():
-            form_catatan.instance.owner=req.user
-            form_catatan.save()
-        images = []
-        files = req.FILES.getlist('upload_img')
-        for file in files:
-            images.append(models.Gambar.objects.create(upload_img=file,catatan=form_catatan.instance))
-        return redirect('/catatan.d/')
     return render(req, 'catatan.d/index.html',{
         'form_catatan' : form_catatan,
         'form_gambar' : form_gambar,

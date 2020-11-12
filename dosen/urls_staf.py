@@ -10,6 +10,4 @@ urlpatterns = [
     # path('<id>/', views.detail_staf),
     path('<id>/delete/', views.delete_staf),
     path('<id>/update/', views.update_staf),
-    path('<id>/', views.detail_dosen),
-
 ]

@@ -5,7 +5,10 @@ from mitra.models import Mitra
 from catatan.models import Catatan
 from bootstrap_datepicker_plus import DatePickerInput
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='/accounts/')
 def index(req):
 
     tasks_approved = models.Pkl.objects.filter(owner=req.user,approve=True).first()
@@ -34,6 +37,7 @@ def index(req):
     })
     
 
+@login_required(login_url='/accounts/')
 def index_staf(req):
     tasks = models.Pkl.objects.filter(owner=req.user)
     form_input = forms.PklForm()
@@ -56,6 +60,7 @@ def index_staf(req):
         'form_reject':form_reject,  
     })
 
+@login_required(login_url='/accounts/')
 def index_dosen(req):
     group = req.user.groups.first() #mengambil group user
     tasks = models.Pkl.objects.all() # mengambil semua object yang ada di models pkl
@@ -65,6 +70,7 @@ def index_dosen(req):
         'data': pkls,
     })
 
+@login_required(login_url='/accounts/')
 def detail_dosen(req, id):
     pkl = models.Pkl.objects.filter(pk=id).first()
     catatans = Catatan.objects.filter(owner=pkl.owner) # mengambil semua object yang ada di models Catatan
@@ -72,29 +78,34 @@ def detail_dosen(req, id):
         'data': catatans,
     })
 
+@login_required(login_url='/accounts/')
 def detail(req, id):
     pkl = models.Pkl.objects.filter(pk=id).first()    
     return render(req, 'mahasiswa/detail.html', {
         'data': pkl,
     })
 
+@login_required(login_url='/accounts/')
 def detail_staf(req, id):
     pkl = models.Pkl.objects.filter(pk=id).first()    
     return render(req, 'mahasiswas/detail.html', {
         'data': pkl,
     })
 
+@login_required(login_url='/accounts/')
 def delete(req, id):
     models.Pkl.objects.filter(pk=id).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect('/mahasiswa')
 
+@login_required(login_url='/accounts/')
 def delete_staf(req, id):
     models.Pkl.objects.filter(pk=id).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect('/mahasiswas')
 
 
+@login_required(login_url='/accounts/')
 def update(req, id):
     widgets = {
         'tanggal_mulai': DatePickerInput(),
@@ -115,6 +126,7 @@ def update(req, id):
         'data': pkl,
     })
 
+@login_required(login_url='/accounts/')
 def update_staf(req, id):
     widgets = {
         'tanggal_mulai': DatePickerInput(),
@@ -133,10 +145,12 @@ def update_staf(req, id):
         'data': pkl,
     })
 
+@login_required(login_url='/accounts/')
 def approve(req, id):
     a = models.Pkl.objects.filter(pk=id).update(approve=True)
     return redirect('/mahasiswas')
 
+@login_required(login_url='/accounts/')
 def reject(req,id):
     form_reject = forms.RejectForm(req.POST)
     if req.POST:

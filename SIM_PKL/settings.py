@@ -1,10 +1,8 @@
 import os
-import dj_database_url
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -13,10 +11,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'y&ma&g0z0r603*p2qz9^hotn**h60eey1w2kwb)glz#sdtt8&)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS = [
+    'labsosv1.herokuapp.com',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,11 +80,11 @@ WSGI_APPLICATION = 'SIM_PKL.wsgi.application'
 DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tatam',
-        'USER': 'giko99',
-        'PASSWORD': 'gikoriyo382',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': 'dbk12puvf157ej',
+        'USER': 'kzbntlqwmzalfj',
+        'PASSWORD': '10c990a4089fa52853c22066dc9e6633b82249f8127854c93bebd4a6051a6990',
+        'HOST': 'ec2-3-220-222-72.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
@@ -123,12 +122,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS =[
     BASE_DIR + "/static",
@@ -150,5 +144,3 @@ MESSAGE_TAGS ={
     messages.SUCCESS : 'alert-success',
     messages.WARNING : 'alert-warning',
 }
-
-django_heroku.settings(locals())

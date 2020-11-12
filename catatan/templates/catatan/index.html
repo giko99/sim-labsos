@@ -24,7 +24,7 @@
                   aria-controls="collapse-{{d.id}}">
                   <h5 class="mb-0">
                     <div class="row" style="color: white; font-size: medium;">
-                      <div class="col-sm-6">Minggu ke-{{catatan.waktu}}</div>
+                      <div class="col-sm-6">Hari ke-{{forloop.counter}}</div>
                     </div>
                   </h5>
                 </a>
@@ -37,11 +37,13 @@
                     <td>{{forloop.counter}}</td>
                     <td>{{d.waktu}}</td>
                     <td>{{d.judul}}</td>
+                    <!-- <td>{{d.ket}}</td> -->
                     <td>
                       {% for img_obj in d.catatan.all %}
                       <a href="{{img_obj}}">File {{forloop.counter}}</a>
                       {% endfor %}
                     </td>
+                    <td>{{d.selang}}</td>
                   </tr>
                   <!-- Modal Detail -->
                   <div class="modal fade" id="detail-{{d.id}}" tabindex="-1" role="dialog"
@@ -55,7 +57,7 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <dd><i>{{d.waktu}}</i></dd>
+                          <dd><i>{{d.waktu}} {{d.waktu_kegiatan}}</i></dd>
                           <dt>{{d.judul}}</dt>
                           <p>{{d.ket}}</p>
                           {% for d in d.catatan.all %}

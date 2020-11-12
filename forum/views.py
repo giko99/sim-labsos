@@ -4,12 +4,16 @@ from mahasiswa.models import Pkl
 # from catatan.models import Gambar
 from . import models, forms
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+
+@login_required(login_url='/accounts/')
 def index_mhs(req):
     forum = req.user.mahasiswa.first().nama_mitra
 
     return redirect(f'/forum/{forum.id}')
 
+@login_required(login_url='/accounts/')
 def index_dosen(req):
     tasks = req.user.membimbing.all()
     form_input = forms.ForumForm()
@@ -27,6 +31,7 @@ def index_dosen(req):
         'form' : form_input,
     })
 
+@login_required(login_url='/accounts/')
 def index_staf(req):
     tasks = models.Forum.objects.all()
     form_input = forms.ForumForm()
@@ -45,12 +50,14 @@ def index_staf(req):
     })
 
 
+@login_required(login_url='/accounts/')
 def delete_forum(req, id):
     models.Forum.objects.filter(pk=id).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect('/forums/')
 
 
+@login_required(login_url='/accounts/')
 def detail_forum(req, id):
     forum = models.Forum.objects.filter(pk=id).first() 
     form_input = forms.PostingForm()
@@ -81,6 +88,7 @@ def detail_forum(req, id):
         'data': forum,
     })
 
+@login_required(login_url='/accounts/')
 def detail_forum_d(req, id):
     forum = models.Forum.objects.filter(pk=id).first()
     form_input = forms.PostingForm()
@@ -103,6 +111,7 @@ def detail_forum_d(req, id):
         'data': forum,
     })
 
+@login_required(login_url='/accounts/')
 def detail_forum_mhs(req, id):
     forum = models.Forum.objects.filter(pk=id).first()
     komen = models.Komen.objects.filter(pk=id).first()
@@ -128,37 +137,44 @@ def detail_forum_mhs(req, id):
     })
 
 
+@login_required(login_url='/accounts/')
 def delete_posting(req, id, id_posting):
     models.Posting.objects.filter(pk=id_posting).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect(f'/forums/{id}')
 
+@login_required(login_url='/accounts/')
 def delete_posting_d(req, id, id_posting):
     models.Posting.objects.filter(pk=id_posting).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect(f'/forumd/{id}')
 
+@login_required(login_url='/accounts/')
 def delete_posting_mhs(req, id, id_posting):
     models.Posting.objects.filter(pk=id_posting).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect(f'/forum/{id}')
     
+@login_required(login_url='/accounts/')
 def delete_komen_mhs(req, id, id_posting, id_komen):
     models.Komen.objects.filter(pk=id_komen).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect(f'/forum/{id}')
 
+@login_required(login_url='/accounts/')
 def delete_komen(req, id, id_komen):
     models.Komen.objects.filter(pk=id_komen).delete()
     messages.success(req, 'data telah di hapus.')
     return redirect(f'/forums/{id}/komen')
 
+@login_required(login_url='/accounts/')
 def delete_komen_d(req, id, id_komen):
     models.Komen.objects.filter(pk=id_komen).delete()
     messages.success(req, 'data telah di hapusid_posting')
     return redirect(f'/forumd/{id}/komen')
 
 
+@login_required(login_url='/accounts/')
 def staf_komen(req, id, id_posting):
     posting = models.Posting.objects.filter(pk=id_posting).first() 
 
@@ -171,6 +187,7 @@ def staf_komen(req, id, id_posting):
 
     return redirect(f'/forums/{id}')
 
+@login_required(login_url='/accounts/')
 def dosen_komen(req, id, id_posting):
     posting = models.Posting.objects.filter(pk=id_posting).first() 
 
@@ -183,6 +200,7 @@ def dosen_komen(req, id, id_posting):
 
     return redirect(f'/forumd/{id}')
     
+@login_required(login_url='/accounts/')
 def mhs_komen(req, id, id_posting):
     posting = models.Posting.objects.filter(pk=id_posting).first() 
 

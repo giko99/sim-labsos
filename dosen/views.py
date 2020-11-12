@@ -3,15 +3,23 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from mahasiswa.models import Pkl
 from . import models, forms
-from catatan.models import Catatan
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url='/accounts/')
 def index(req):
     return render(req, 'dosen/index.html')
 
+@login_required(login_url='/accounts/')
+def detail_dosen(req, id):
+    dosen = models.Dosen.objects.filter(pk=id).first()
+    catatans = Catatan.objects.filter(owner=dosen.owner) # mengambil semua object yang ada di models Catatan
+    return render(req, 'dosens/detail.html',{
+        'data': catatans,
+    })
+
+@login_required(login_url='/accounts/')
 def index_staf(req):
     tasks = models.Dosen.objects.all()
-    dosen = models.User.objects.all()
     form_input = forms.DosenForm()
     form_user = forms.CreateUserForm()
 
@@ -27,9 +35,9 @@ def index_staf(req):
         'data': tasks,
         'form' : form_input,
         'form_user' : form_user,
-        'dosen' : dosen,
     })
 
+@login_required(login_url='/accounts/')
 def catatan(req, id):
     dosen = models.Dosen.objects.all()
 
@@ -41,6 +49,7 @@ def catatan(req, id):
         'data': mahasiswa,
     })
 
+@login_required(login_url='/accounts/')
 def update_staf(req, id):
     if req.POST:
         mitra = models.Dosen.objects.filter(pk=id).update(nip=req.POST['nip'], nama_dosen=req.POST['nama_dosen'], fakultas=req.POST['fakultas'], jurusan=req.POST['jurusan'])
@@ -51,21 +60,7 @@ def update_staf(req, id):
         'data': dosen,
     })
 
+@login_required(login_url='/accounts/')
 def delete_staf(req, id):
     models.Dosen.objects.filter(pk=id).delete()
     return redirect('/dosens/')
-
-# def index_dosen(req):
-#     group = req.user.groups.first() #mengambil group user
-#     tasks = models.Pkl.objects.all() # mengambil semua object yang ada di models pkl
-#     if group is not None and group.name == 'dosen': # mendefinisikan bahwa ini adalah dosen
-#         pkls = models.Pkl.objects.filter(nama_dosen=req.user) # memfilter bahwa satu mahasiswa hanya boleh menginputkan satu dosen
-#     return render(req, 'dosenah/index.html',{
-#         'data': pkls,
-#     })
-
-def detail_dosen(req, id):
-    catatans = Catatan.objects.filter(owner=catatan.owner) # mengambil semua object yang ada di models Catatan
-    return render(req, 'dosens/detail.html',{
-        'data': catatans,
-    })

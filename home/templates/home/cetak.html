@@ -1,7 +1,7 @@
 {% load static %}
+
 {% block content %}
 <!DOCTYPE html>
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Preview dan Cetak</title>
@@ -18,14 +18,6 @@
         h1 {
             text-align: center;
         }
-
-        /* table {
-            border-collapse: collapse;
-            margin: 0 auto;
-            width: 100%;
-            position: relative;
-        } */
-
         td,
         th {
             text-align: center;
@@ -49,12 +41,12 @@
         <dt class="col-1">Labsos:</dt>
         <dd class="col-5">{{forum.nama_mitra}}</dd>
     </dl>
-    <dl class="row">
+    <!-- <dl class="row">
         <dt class="col-1">NIM :</dt>
         <dd class="col-5">?</dd>
         <dt class="col-1">Tema :</dt>
         <dd class="col-5">?</dd>
-    </dl>
+    </dl> -->
 
     <dl class="row">
         <dt class="col-1">DPL:</dt>
@@ -74,17 +66,19 @@
         <tr style="background-color:lightblue;">
             <th>No</th>
             <th>Tanggal Kegiatan</th>
-            <th>Nama</th>
-            <th>Judul</th>
+            <!-- <th>Nama</th>
+            <th>Judul</th> -->
             <th>Uraian</th>
+            <th>Selang Waktu (Menit)</th>
         </tr>
         {% for d in cetak %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{d.tgl_kegiatan}}</td>
-            <td>{{d.owner}}</td>
-            <td>{{d.judul}}</td>
+            <!-- <td>{{d.owner}}</td>
+            <td>{{d.judul}}</td> -->
             <td>{{d.ket}}</td>
+            <td>{{d.waktu_kegiatan}}</td>
 
 
         </tr>
